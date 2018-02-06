@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -38,7 +39,7 @@ namespace Products.Domain
         [DataType(DataType.MultilineText)]
         public string Remarks { get; set; }
 
-       // [JsonIgnore]
-        //public virtual Category Category { get; set; }
+        [JsonIgnore]
+       public virtual ICategory Category { get; set; }  // Relacion uno a muchos
     }
 }

@@ -14,6 +14,9 @@ namespace Products.Domain
         {
 
         }
+        public System.Data.Entity.DbSet<Products.Domain.ICategory> ICategories { get; set; }
+
+        public System.Data.Entity.DbSet<Products.Domain.IProduct> IProducts { get; set; }
 
     }
 }

@@ -8,6 +8,6 @@ namespace Products.Backend.Models
 {
     public class DataContextLocal : DataContext
     {
-        public System.Data.Entity.DbSet<Products.Domain.ICategory> ICategories { get; set; }
+       
     }
 }

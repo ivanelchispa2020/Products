@@ -21,6 +21,6 @@ namespace Products.Domain
         public string Description { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<IProduct> Products { get; set; }
+        public virtual ICollection<IProduct> Products { get; set; } // relacion muchos
     }
 }
