@@ -9,10 +9,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Mvc;
 using Products.Domain;
 
 namespace Products.Api.Controllers
 {
+
+    [System.Web.Http.Authorize]
     public class ICategoriesController : ApiController
     {
         private DataContext db = new DataContext();

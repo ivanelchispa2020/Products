@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Products.Backend.Models;
 using Products.Domain;
+using Products.Backend.Helpers;
 
 namespace Products.Backend.Controllers
 {
@@ -30,7 +31,7 @@ namespace Products.Backend.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IProduct iProduct = await db.IProducts.FindAsync(id);
+            var  iProduct = await db.IProducts.FindAsync(id);
             if (iProduct == null)
             {
                 return HttpNotFound();
@@ -50,17 +51,45 @@ namespace Products.Backend.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ProductId,CategoryId,Description,Image,Price,IsActive,LastPurchase,Stock,Remarks")] IProduct iProduct)
+        public async Task<ActionResult> Create(ProductView view)
         {
             if (ModelState.IsValid)
             {
-                db.IProducts.Add(iProduct);
+                var pic = string.Empty;
+                var folder = "~/Content/Images";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelpers.UploadPhoto(view.ImageFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                    
+                }
+                var product = ToProduct(view);
+                product.Image = pic;
+         
+                db.IProducts.Add(product);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(db.ICategories, "CategoryId", "Description", iProduct.CategoryId);
-            return View(iProduct);
+            ViewBag.CategoryId = new SelectList(db.ICategories, "CategoryId", "Description", view.CategoryId);
+            return View(view);
+        }
+
+        private IProduct ToProduct(ProductView view)
+        {
+            return new IProduct {
+                ProductId = view.ProductId,
+                CategoryId = view.CategoryId,
+                Description = view.Description,
+                Image = view.Image,
+                Price = view.Price,
+                IsActive =view.IsActive,
+                LastPurchase=view.LastPurchase,
+                Stock = view.Stock,
+                Remarks =view.Remarks,
+                Category=view.Category
+            }; 
         }
 
         // GET: IProducts/Edit/5

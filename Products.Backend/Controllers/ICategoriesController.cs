@@ -12,6 +12,7 @@ using Products.Domain;
 
 namespace Products.Backend.Controllers
 {
+    [Authorize]
     public class ICategoriesController : Controller
     {
         private DataContextLocal db = new DataContextLocal();
@@ -29,7 +30,7 @@ namespace Products.Backend.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ICategory iCategory = await db.ICategories.FindAsync(id);
+            var iCategory = await db.ICategories.FindAsync(id);
             if (iCategory == null)
             {
                 return HttpNotFound();
