@@ -99,13 +99,33 @@ namespace Products.Backend.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IProduct iProduct = await db.IProducts.FindAsync(id);
+            var iProduct = await db.IProducts.FindAsync(id);
             if (iProduct == null)
             {
                 return HttpNotFound();
             }
             ViewBag.CategoryId = new SelectList(db.ICategories, "CategoryId", "Description", iProduct.CategoryId);
-            return View(iProduct);
+
+            var view = ToView(iProduct); // METODO QUE CONVIERTE EL PRODUCTO A VIEW
+            return View(view);  /// MANDAMOS LA VIEW
+        }
+
+        private ProductView ToView(IProduct iProduct)
+        {
+            return new ProductView
+            {
+                ProductId = iProduct.ProductId,
+                CategoryId = iProduct.CategoryId,
+                Description = iProduct.Description,
+                Image = iProduct.Image,
+                Price = iProduct.Price,
+                IsActive = iProduct.IsActive,
+                LastPurchase = iProduct.LastPurchase,
+                Stock = iProduct.Stock,
+                Remarks = iProduct.Remarks,
+                Category = iProduct.Category
+            };
+
         }
 
         // POST: IProducts/Edit/5
@@ -113,16 +133,28 @@ namespace Products.Backend.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ProductId,CategoryId,Description,Image,Price,IsActive,LastPurchase,Stock,Remarks")] IProduct iProduct)
+        public async Task<ActionResult> Edit(ProductView view)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(iProduct).State = EntityState.Modified;
+                var pic = view.Image;
+                var folder = "~/Content/Images";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelpers.UploadPhoto(view.ImageFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+
+                }
+                var product = ToProduct(view);
+                product.Image = pic;
+
+                db.Entry(product).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(db.ICategories, "CategoryId", "Description", iProduct.CategoryId);
-            return View(iProduct);
+            ViewBag.CategoryId = new SelectList(db.ICategories, "CategoryId", "Description", view.CategoryId);
+            return View(view);
         }
 
         // GET: IProducts/Delete/5
