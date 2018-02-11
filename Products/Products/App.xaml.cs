@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using Products.Views;
 using Xamarin.Forms;
+using Products.Views;
 
 namespace Products
 {
@@ -13,7 +14,7 @@ namespace Products
 		{
 			InitializeComponent();
 
-			MainPage = new Products.MainPage();
+			MainPage = new NavigationPage(new LoginView());
 		}
 
 		protected override void OnStart ()

@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products.iOS", "Products\Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products.UWP", "Products\Products.UWP\Products.UWP.csproj", "{7C0F8F45-AC3A-473B-886B-A2E27A5C89F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products", "Products\Products\Products.csproj", "{A4A57430-B1F1-4E2F-B432-F01B12B1F388}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products", "Products\Products\Products.csproj", "{A4A57430-B1F1-4E2F-B432-F01B12B1F388}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Products.Domain", "Products.Domain\Products.Domain.csproj", "{2D361465-6C11-4B8C-91FD-B5E5C3FF4B2E}"
 EndProject
@@ -141,6 +141,7 @@ Global
 		{938F62A3-47DC-4AC4-A2AA-0BF5E383CCE2}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
 		{938F62A3-47DC-4AC4-A2AA-0BF5E383CCE2}.Debug|x64.ActiveCfg = Debug|iPhone
 		{938F62A3-47DC-4AC4-A2AA-0BF5E383CCE2}.Debug|x86.ActiveCfg = Debug|iPhone
+		{938F62A3-47DC-4AC4-A2AA-0BF5E383CCE2}.Debug|x86.Build.0 = Debug|iPhone
 		{938F62A3-47DC-4AC4-A2AA-0BF5E383CCE2}.Release|Any CPU.ActiveCfg = Release|iPhone
 		{938F62A3-47DC-4AC4-A2AA-0BF5E383CCE2}.Release|ARM.ActiveCfg = Release|iPhone
 		{938F62A3-47DC-4AC4-A2AA-0BF5E383CCE2}.Release|iPhone.ActiveCfg = Release|iPhone
