@@ -6,7 +6,8 @@ using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Products.Services;
-
+using Products.Views;
+using Products.Models;
 
 namespace Products.ViewModels
 {
@@ -78,6 +79,7 @@ namespace Products.ViewModels
             }
         }
 
+
         #endregion
 
 
@@ -97,6 +99,7 @@ namespace Products.ViewModels
         #region Servicios
         DialogService dialogService;
         ApiService apiService;
+        NavigationService navigationService;
         #endregion
 
 
@@ -104,6 +107,7 @@ namespace Products.ViewModels
         #region Constructor
         public LoginViewModel()
         {
+            navigationService = new NavigationService();
             dialogService = new DialogService();
             apiService = new ApiService();
             IsEnabled = true;
@@ -212,7 +216,20 @@ namespace Products.ViewModels
                 return;
             }
 
-            await dialogService.ShowMessage("OK","TODO MAS QUE BIEN");
+          
+            var mainViewModel = MainViewModel.getInstance();   // SINGLETON
+            mainViewModel.Token = response;   // PARA OBTENER EL TOKEN Y TENERLO ALMACENADO
+            mainViewModel.Categories = new CategoriesViewModel();  // LA LIGAMOS CON LA VIEWMODEL
+
+          await  navigationService.Navigate("CategoriesView");// LO ENVIA A OTRA PAGINA
+
+            Email = null;
+            Password = null;
+
+            IsRunning = false;
+            IsEnabled = true;
+
+
 
         }
 

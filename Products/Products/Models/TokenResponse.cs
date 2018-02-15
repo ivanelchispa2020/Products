@@ -12,7 +12,7 @@ namespace Products.Models
         [PrimaryKey, AutoIncrement]
         public int TokenResponseId { get; set; }
 
-        [JsonProperty(PropertyName = "access_token")]
+        [JsonProperty(PropertyName = "access_token")]  // CAMBIA EL NOMBRE INTERNAMENTE
         public string AccessToken { get; set; }
 
         [JsonProperty(PropertyName = "token_type")]
@@ -47,7 +47,7 @@ namespace Products.Models
         #endregion
 
         #region Methods
-        public override int GetHashCode()
+        public override int GetHashCode()   // METODO NECESARIO PARA TRABAJAR CON LAS BBDD --RETORNA EL  ID DEL OBJETO
         {
             return TokenResponseId;
         }

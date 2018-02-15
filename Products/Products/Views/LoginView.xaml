@@ -7,57 +7,28 @@
     <ContentPage.Content>
         <StackLayout BindingContext="{Binding Login}" Padding="10">
             <Label Text="Productos" TextColor="Green" HorizontalOptions="Center"></Label>
-            <Grid
-                Margin="50,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-
-                <Label
-                    Grid.Column="0"
-                    Grid.Row="0"
-                    Text="Email:"
-                    TextColor="{StaticResource FontColor}"
-                    VerticalOptions="Center">
-                </Label>
-                <Entry
-                    Grid.Column="1"
-                    Grid.Row="0"
-                    Keyboard="Email"
+                  <Entry
+                Keyboard="Email"
                     Placeholder="Ingrese su Email..."
                     Text="{Binding Email, Mode=TwoWay}">
                 </Entry>
-
-                <Label
-                    Grid.Column="0"
-                    Grid.Row="1"
-                    TextColor="{StaticResource FontColor}"
-                    Text="Contraseña:"
-                    VerticalOptions="Center">
-                </Label>
-                <Entry
-                    Grid.Column="1"
-                    Grid.Row="1"
+             <Entry
                     IsPassword="true"
                     Placeholder="Ingrese su Contraseña..."
                     Text="{Binding Password, Mode=TwoWay}">
                 </Entry>
-            </Grid>
-            
             <StackLayout
                 HorizontalOptions="Center"
                 Orientation="Horizontal">
                 <Label
-                    TextColor="{StaticResource FontColor}"
+                    TextColor="Fuchsia"
                     Text="Recordar "
                     VerticalOptions="Center">
                 </Label>
                 <Switch
                     IsToggled="{Binding IsToggled, Mode=TwoWay}">
                 </Switch>
-          </StackLayout>
-            
+            </StackLayout>
             <Label
                 HorizontalOptions="Center"
                 Text="Olvido su Contraseña?"
@@ -69,7 +40,6 @@
             <ActivityIndicator
                 IsRunning="{Binding IsRunning, Mode=TwoWay}">
             </ActivityIndicator>
-            
             <Button
                     Command="{Binding LoginCommand}"
                     BackgroundColor="{StaticResource AccentColor1}"

@@ -47,7 +47,7 @@ namespace Products.Services
 
 
 
-        public async Task<TokenResponse> GetToken(
+        public async Task<TokenResponse> GetToken(  /// PARA LOS TOKEN  (AUTENTICACION DE VISUAL)
            string urlBase,
            string username,
            string password)

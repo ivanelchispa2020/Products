@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Mvc;
+using Products.Api.Models;
 using Products.Domain;
 
 namespace Products.Api.Controllers
@@ -21,9 +22,43 @@ namespace Products.Api.Controllers
         private DataContext db = new DataContext();
 
         // GET: api/ICategories
-        public IQueryable<ICategory> GetICategories()
+        public async Task<IHttpActionResult> GetICategories()
         {
-            return db.ICategories;
+            var categories = await db.ICategories.ToListAsync();
+            var categoriesResponse=new List<CategoryResponse>();
+
+            foreach (var category in categories)
+            {
+                var productsResponse = new List<ProductsResponse>();
+
+                    foreach (var product in category.Products)  // LISTA DE PRODUCTOS
+                    {
+                        productsResponse.Add(new ProductsResponse
+                        {
+                            Description = product.Description,
+                            Image=product.Image,
+                            IsActive=product.IsActive,
+                            LastPurchase=product.LastPurchase,
+                            Price=product.Price,
+                            ProductId=product.ProductId,
+                            Remarks=product.Remarks,
+                            Stock=product.Stock
+
+                        });
+                    }
+
+
+                categoriesResponse.Add(new CategoryResponse // ADHIERE TODOS LOS PRODUCTOS A LA CATEGORIA
+                {
+                        CategoryId=category.CategoryId,
+                        Description=category.Description,
+                        Products= productsResponse  
+                });
+            }
+
+
+            return Ok(categoriesResponse);
+
         }
 
         // GET: api/ICategories/5
