@@ -18,6 +18,8 @@ namespace Products.ViewModels
         public ProductsViewModel Products{ get; set; }
         public TokenResponse Token { get; set; }
         public NewCategoryViewModel NewCategory{ get; set; }
+        public EditCategoryViewModel EditCategory{ get; set; }
+        
 
 
         public ICommand NewCategoryCommand

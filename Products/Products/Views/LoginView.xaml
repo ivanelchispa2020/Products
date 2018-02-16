@@ -2,12 +2,13 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              BindingContext="{Binding Main, Source={StaticResource Locator}}"
+             xmlns:ci = "clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"   
              x:Class="Products.Views.LoginView"
              Title="Login">
     <ContentPage.Content>
         <StackLayout BindingContext="{Binding Login}" Padding="10">
-            <Label Text="Productos" TextColor="Green" HorizontalOptions="Center"></Label>
-                  <Entry
+          
+            <Entry
                 Keyboard="Email"
                     Placeholder="Ingrese su Email..."
                     Text="{Binding Email, Mode=TwoWay}">

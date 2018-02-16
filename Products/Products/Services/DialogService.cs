@@ -14,5 +14,16 @@ namespace Products.Services
                 "Accept");
         }
 
+        public async Task<bool> ShowConfirm(string title, string message)  /// PARA MOSTRAR MENSAJES EMERGENTES
+        {
+            return await Application.Current.MainPage.DisplayAlert(
+                title,
+                message,
+                "Aceptar",
+                "Cancelar");
+
+        }
+
+
     }
 }

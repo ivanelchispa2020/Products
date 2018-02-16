@@ -37,6 +37,24 @@ namespace Products.ViewModels
         }
 
 
+        public bool IsRefreshing
+        {
+            get
+            {
+                return _IsRefreshing;
+            }
+            set
+            {
+                if (_IsRefreshing != value)
+                {
+                    _IsRefreshing = value;
+                    PropertyChanged?.Invoke(
+                        this,
+                        new PropertyChangedEventArgs(nameof(IsRefreshing)));
+                }
+            }
+        }
+
         #endregion
 
 
@@ -58,6 +76,7 @@ namespace Products.ViewModels
         #region Atributos
         List<Category> categories;
         ObservableCollection<Category> _categories;
+        bool _IsRefreshing;
         #endregion
 
 
@@ -66,7 +85,8 @@ namespace Products.ViewModels
         #region Metodos
         async void loadCategories()
         {
-            
+            IsRefreshing = true;
+
             var connection = await ApiService.CheckConnection();
          
                 if (!connection.IsSuccess)
@@ -97,14 +117,64 @@ namespace Products.ViewModels
             categories =(List<Category>) response.Result;
             Categories = new ObservableCollection<Category>(categories.OrderBy(c => c.Description));  // ORDENA ALFABETICAMENTE
 
+            IsRefreshing = false;
         }
 
 
         public void AddCategory(Category category)
         {
+            IsRefreshing = true;
             categories.Add(category);
             Categories = new ObservableCollection<Category>(categories.OrderBy(c => c.Description));  // ORDENA ALFABETICAMENTE
+            IsRefreshing = false;
+        }
 
+        public void UpdateCategory(Category category)
+        {
+            IsRefreshing = true;
+            var oldCategory = categories.Where(c => c.CategoryId==category.CategoryId).FirstOrDefault(); // BUSCO LA CATEGORIA
+            oldCategory = category;
+            Categories = new ObservableCollection<Category>(categories.OrderBy(c => c.Description));  // ORDENA ALFABETICAMENTE
+            IsRefreshing = false;
+        }
+
+       public  async void DeleteCategory(Category category)
+        {
+            IsRefreshing = true;
+
+            var connection = await ApiService.CheckConnection();// VERIFICO SI HAY CONEXION
+            if(!connection.IsSuccess)
+            {
+                IsRefreshing = false;
+                await DialogService.ShowMessage("Error", connection.Message);
+                return;
+            }
+
+            var urlAPI = Application.Current.Resources["URLAPI"].ToString();
+
+            var mainViewModel = MainViewModel.getInstance();
+
+            var response = await ApiService.Delete(    //ELIMINA  LA CATEGORIA EN LA API
+                    urlAPI,
+                    "/api",
+                    "/ICategories",
+                    mainViewModel.Token.TokenType,
+                    mainViewModel.Token.AccessToken,
+                    category
+               );
+
+            if (!response.IsSuccess)
+            {
+                await DialogService.ShowMessage(
+              "Error",
+              response.Message);
+                return;
+            }
+
+            categories.Remove(category);  // ELIMINA DE LA LISTA LIST
+
+            Categories = new ObservableCollection<Category>(categories.OrderBy(c => c.Description));  // ORDENA ALFABETICAMENTE
+            IsRefreshing = false;
         }
 
         #endregion
@@ -155,9 +225,16 @@ namespace Products.ViewModels
             await DialogService.ShowMessage("OK", "BUSCAR");
         }
 
-      
 
+        public ICommand RefreshCommand
+        {
+            get
+            {
+                return new RelayCommand(loadCategories);  // METODO QUE REFRESCA LA PAGINA
+            }
+        }
 
+       
         #endregion
 
 

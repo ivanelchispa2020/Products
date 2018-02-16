@@ -119,7 +119,25 @@ namespace Products.Api.Controllers
             }
 
             db.ICategories.Add(iCategory);
-            await db.SaveChangesAsync();
+
+             // -------  PARA QUE NOS ENVIE LOS ERRORES
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null &&
+                                  ex.InnerException.InnerException != null &&
+                                  ex.InnerException.InnerException.Message.Contains("Index"))
+                {
+                    return BadRequest("Debes ingresar otra descrpcion..");
+                }
+                else
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
 
             return CreatedAtRoute("DefaultApi", new { id = iCategory.CategoryId }, iCategory);
         }

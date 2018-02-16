@@ -104,6 +104,7 @@
     <None Include="Products.UWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dragon.png" />
     <Content Include="ic_add.png" />
     <Content Include="ic_chevron_right.png" />
     <Content Include="Properties\Default.rd.xml" />

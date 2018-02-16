@@ -10,7 +10,7 @@ using Xamarin.Forms;
 
 namespace Products.ViewModels
 {
-    public class NewCategoryViewModel : INotifyPropertyChanged
+    public class EditCategoryViewModel :INotifyPropertyChanged
     {
 
         #region Propiedades
@@ -54,6 +54,8 @@ namespace Products.ViewModels
         }
 
 
+      
+
         #endregion
 
 
@@ -69,21 +71,30 @@ namespace Products.ViewModels
         string _Description;
         bool _IsRunning;
         bool _IsEnabled;
+        private Category category;
         #endregion
 
 
         #region Constructor
-        public NewCategoryViewModel()
+
+       
+        public EditCategoryViewModel(Category category)
         {
-            ApiService=new ApiService();
-            NavigationService=new NavigationService();
-            DialogService=new DialogService();
+           
+            this.category = category;
+            ApiService = new ApiService();
+            NavigationService = new NavigationService();
+            DialogService = new DialogService();
             IsEnabled = true;
+
+            Description = category.Description;
+
         }
+
 
         #endregion
 
-
+    
         #region Comandos
 
         public ICommand SaveCommand { get { return new RelayCommand(Save); } }
@@ -96,11 +107,11 @@ namespace Products.ViewModels
 
         async void Save()
         {
+          
 
-      
             if (string.IsNullOrEmpty(Description))
             {
-                await DialogService.ShowMessage("Error ","Debes agregar una descripcion....");
+                await DialogService.ShowMessage("Error ", "Debes agregar una descripcion....");
                 return;
             }
 
@@ -117,14 +128,14 @@ namespace Products.ViewModels
             }
 
 
-            var category = new Category{ Description = Description, };  // CREO LA CATEGORIA
 
-         
+            category.Description = Description;
+
             var urlAPI = Application.Current.Resources["URLAPI"].ToString();
 
-            MainViewModel mainViewModel = MainViewModel.getInstance();
+            var mainViewModel = MainViewModel.getInstance();
 
-            var response = await ApiService.Post(    //ENVIA LA CATEGORIA
+            var response = await ApiService.Put(    //ENVIA LA CATEGORIA
                     urlAPI,
                     "/api",
                     "/ICategories",
@@ -141,15 +152,12 @@ namespace Products.ViewModels
                 await DialogService.ShowMessage(
                     "Error",
                     response.Message);
-              
+
                 return;
             }
-
-
-            category =(Category) response.Result;
-
+            
             var categoriesViewModel = CategoriesViewModel.GetInstance();
-            categoriesViewModel.AddCategory(category);
+            categoriesViewModel.UpdateCategory(category);  // REFRESCO LA LISTA
 
             await NavigationService.Back();
 
@@ -167,7 +175,8 @@ namespace Products.ViewModels
 
 
         #region Eventos
-        public event PropertyChangedEventHandler PropertyChanged; 
+        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
+
     }
 }
