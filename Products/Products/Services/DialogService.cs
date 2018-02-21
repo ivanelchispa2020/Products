@@ -25,5 +25,19 @@ namespace Products.Services
         }
 
 
+        public async Task<string> ShowImageOptions() // VENTANA EMERGENTE PARA SABER DE DONDE OBTNER LA IMAGEN
+        {
+            return await Application.Current.MainPage.DisplayActionSheet(
+                "Where do you take the image?",
+                "Cancel",
+                null,
+                "From Gallery",
+                "From Camera");
+        }
+
+
+
+
+
     }
 }

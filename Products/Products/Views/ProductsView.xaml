@@ -9,7 +9,7 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem 
             Command="{Binding NewProductCommand}"
-            Icon="ic_action_add_circle"/>
+            Icon="ic_add.png"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>

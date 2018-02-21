@@ -112,6 +112,8 @@ namespace Products.ViewModels
             apiService = new ApiService();
             IsEnabled = true;
             IsToggled = true;
+            Email = "ivanlopez_88@hotmail.com";
+            Password = "Dontetto2020-";
           
         }
         #endregion

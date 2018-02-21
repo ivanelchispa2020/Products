@@ -30,6 +30,7 @@ namespace Products.Models
         #region Constructor
         public Category()
         {
+
             NavigationService = new NavigationService();
             DialogService = new DialogService();
         } 
@@ -40,7 +41,6 @@ namespace Products.Models
 
         public ICommand SelectCategoryCommand { get { return new RelayCommand(SelectCategoryAsync); }  }
         public ICommand EditCommand { get { return new RelayCommand(Edit); } }
-
         public ICommand DeleteCommand { get { return new RelayCommand(Delete); } }
 
     
@@ -51,6 +51,7 @@ namespace Products.Models
         async void SelectCategoryAsync()
         {
             var mainViewModel = MainViewModel.getInstance();
+            mainViewModel.Category = this;  //  PARA TENERLA EN LA MEMORIA
             mainViewModel.Products = new ProductsViewModel(Products);
             await Application.Current.MainPage.Navigation.PushAsync(new ProductsView());
         }
@@ -84,6 +85,10 @@ namespace Products.Models
         NavigationService NavigationService;
         DialogService DialogService;
         #endregion
+
+
+       
+
 
 
 

@@ -94,18 +94,19 @@ namespace Products.Api.Controllers
             {
                 await db.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!ICategoryExists(id))
+                if (ex.InnerException != null &&
+                                  ex.InnerException.InnerException != null &&
+                                  ex.InnerException.InnerException.Message.Contains("Index"))
                 {
-                    return NotFound();
+                    return BadRequest("Debes ingresar otra descrpcion..");
                 }
                 else
                 {
-                    throw;
+                    return BadRequest(ex.Message);
                 }
             }
-
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -153,7 +154,25 @@ namespace Products.Api.Controllers
             }
 
             db.ICategories.Remove(iCategory);
-            await db.SaveChangesAsync();
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null &&
+                                  ex.InnerException.InnerException != null &&
+                                  ex.InnerException.InnerException.Message.Contains("REFERENCE"))
+                {
+                    return BadRequest("No se puede borrar...Hay productos relacionados en esta categoria...");
+                }
+                else
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
 
             return Ok(iCategory);
         }

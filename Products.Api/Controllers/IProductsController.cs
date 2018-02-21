@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Products.Api.Helpers;
+using Products.Api.Models;
 using Products.Domain;
 
 namespace Products.Api.Controllers
@@ -73,18 +76,75 @@ namespace Products.Api.Controllers
 
         // POST: api/IProducts
         [ResponseType(typeof(IProduct))]
-        public async Task<IHttpActionResult> PostIProduct(IProduct iProduct)
+        public async Task<IHttpActionResult> PostIProduct(ProductRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.IProducts.Add(iProduct);
-            await db.SaveChangesAsync();
+            if (request.ImageArray != null && request.ImageArray.Length > 0)
+            {
+                var stream = new MemoryStream(request.ImageArray);
+                var guid = Guid.NewGuid().ToString();
+                var file = string.Format("{0}.jpg", guid);
+                var folder = "~/Content/Images";
+                var fullPath = string.Format("{0}/{1}", folder, file);
+                var response = FilesHelper.UploadPhoto(stream, folder, file);
 
-            return CreatedAtRoute("DefaultApi", new { id = iProduct.ProductId }, iProduct);
+                if (response)
+                {
+                    request.Image = fullPath;
+                }
+            }
+
+            var product = ToProduct(request);
+            db.IProducts.Add(product);
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null &&
+                    ex.InnerException.InnerException != null &&
+                    ex.InnerException.InnerException.Message.Contains("Index"))
+                {
+                    return BadRequest("There are a record with the same description.");
+                }
+                else
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            return CreatedAtRoute("DefaultApi", new { id = product.ProductId }, product);
+
         }
+
+
+
+        private IProduct ToProduct(ProductRequest request)
+        {
+            return new IProduct
+            {
+                Category = request.Category,
+                CategoryId = request.CategoryId,
+                Description = request.Description,
+                Image = request.Image,
+                IsActive = request.IsActive,
+                LastPurchase = request.LastPurchase,
+                Price = request.Price,
+                ProductId = request.ProductId,
+                Remarks = request.Remarks,
+                Stock = request.Stock,
+            };
+        }
+
+
+
+
+
 
         // DELETE: api/IProducts/5
         [ResponseType(typeof(IProduct))]

@@ -19,7 +19,12 @@ namespace Products.ViewModels
         public TokenResponse Token { get; set; }
         public NewCategoryViewModel NewCategory{ get; set; }
         public EditCategoryViewModel EditCategory{ get; set; }
-        
+        public NewProductViewModel NewProduct { get; set; }
+        public EditProductViewModel EditProduct { get; set; }
+        public Category Category { get; set; }
+      
+
+
 
 
         public ICommand NewCategoryCommand
@@ -29,7 +34,13 @@ namespace Products.ViewModels
                 return new RelayCommand(newCategory);
             }
         }
-
+        public ICommand NewProductCommand
+        {
+            get
+            {
+                return new RelayCommand(newProduct);
+            }
+        }
 
         #endregion
 
@@ -74,5 +85,12 @@ namespace Products.ViewModels
         #endregion
 
 
+        async void newProduct()
+        {
+            NewProduct = new NewProductViewModel(); // DEBO INSTANCIAR SI O SI LA VIEWMODEL
+            await NavigationService.Navigate("NewProductView");
+        }
+
+     
     }
 }
