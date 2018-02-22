@@ -44,7 +44,7 @@ namespace Products.Models
                 }
                 else
                 {
-                    return "no-image";  // SI NO ENCUENTRA LA IMAGEN LA BUSCA EN LO RECURSOS SI NO PONER 
+                    return "noImage";  // SI NO ENCUENTRA LA IMAGEN LA BUSCA EN LO RECURSOS SI NO PONER 
                   //  return "http://pruebaproductos.somee.com/Content/Images/no-image.png"; //LA BUSCA DESDE LA URL DEL BACKEND
                 }
 

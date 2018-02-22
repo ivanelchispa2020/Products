@@ -1,11 +1,9 @@
-﻿using ImageCircle.Forms.Plugin.UWP;
-using System;
+﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Plugin.Media;
 namespace Products.UWP
 {
     /// <summary>
@@ -44,7 +42,7 @@ namespace Products.UWP
 
                 Xamarin.Forms.Forms.Init(e);
 
-                ImageCircleRenderer.Init();  // IMAGE CIRCLE
+             
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

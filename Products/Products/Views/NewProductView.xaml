@@ -77,7 +77,8 @@
                 <Label
                     FontSize="Small"
                     HorizontalOptions="Center"
-                    Text="Toca para agregar una imagen.">
+                    Text="Toca para agregar una imagen."
+                    TextColor="LimeGreen">
                 </Label>
 
                 <ActivityIndicator

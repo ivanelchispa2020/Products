@@ -77,7 +77,8 @@
                 <Label
                     FontSize="Small"
                     HorizontalOptions="Center"
-                    Text="Tap on image to change it.">
+                    Text="T oque para cambiar la Imagen" 
+                    TextColor="LimeGreen">
                 </Label>
 
                 <ActivityIndicator

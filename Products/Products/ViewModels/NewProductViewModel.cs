@@ -26,7 +26,7 @@ namespace Products.ViewModels
         string _Remarks;
         bool _IsRunning;
         bool _IsEnabled;
-        string _Titulo;
+      
 
         // PARA LAS IMAGENES
         ImageSource _ImageSource;
@@ -217,7 +217,7 @@ namespace Products.ViewModels
             IsEnabled = true;
             LastPurchase = DateTime.Today;
             IsActive = true;
-            ImageSource = "no-image.png";
+            ImageSource = "noImage";
         }
 
       

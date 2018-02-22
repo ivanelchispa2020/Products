@@ -1,4 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
+using Products.Helpers;
 using Products.Models;
 using Products.Services;
 using System;
@@ -123,25 +126,7 @@ namespace Products.ViewModels
             }
         }
 
-        public string ImageSource
-        {
-            get
-            {
-                return _ImageSource;
-            }
-            set
-            {
-                if (_ImageSource != value)
-                {
-                    _ImageSource = value;
-                    PropertyChanged?.Invoke(
-                        this,
-                        new PropertyChangedEventArgs(nameof(ImageSource)));
-                }
-            }
-        }
-
-
+  
         public bool IsRunning
         {
             get
@@ -178,6 +163,25 @@ namespace Products.ViewModels
             }
         }
 
+
+        public ImageSource ImageSource
+        {
+            set
+            {
+                if (_imageSource != value)
+                {
+                    _imageSource = value;
+                    PropertyChanged?.Invoke(
+                        this,
+                        new PropertyChangedEventArgs(nameof(ImageSource)));
+                }
+            }
+            get
+            {
+                return _imageSource;
+            }
+        }
+
         #endregion
 
 
@@ -188,10 +192,11 @@ namespace Products.ViewModels
         DateTime _LastPurchase;
         string _Stock;
         string _Remarks;
-        string _ImageSource;
         bool _IsRunning;
         bool _IsEnabled;
         Product product;
+        ImageSource _imageSource;
+        MediaFile file;
 
         #endregion
 
@@ -248,7 +253,48 @@ namespace Products.ViewModels
         #region Metodos
         async void ChangeImage()
         {
-            await DialogService.ShowMessage("OK", "Has pulsado change image");
+            await CrossMedia.Current.Initialize();
+
+            if (CrossMedia.Current.IsCameraAvailable &&
+                CrossMedia.Current.IsTakePhotoSupported)
+            {
+                var source = await DialogService.ShowImageOptions();
+
+                if (source == "Cancel")
+                {
+                    file = null;
+                    return;
+                }
+
+                if (source == "From Camera")
+                {
+                    file = await CrossMedia.Current.TakePhotoAsync(
+                        new StoreCameraMediaOptions
+                        {
+                            Directory = "Sample",
+                            Name = "test.jpg",
+                            PhotoSize = PhotoSize.Small,
+                        }
+                    );
+                }
+                else
+                {
+                    file = await CrossMedia.Current.PickPhotoAsync();
+                }
+            }
+            else
+            {
+                file = await CrossMedia.Current.PickPhotoAsync();
+            }
+
+            if (file != null)
+            {
+                ImageSource = ImageSource.FromStream(() =>
+                {
+                    var stream = file.GetStream();
+                    return stream;
+                });
+            }
         }
 
 
@@ -306,9 +352,20 @@ namespace Products.ViewModels
                 await DialogService.ShowMessage("Error conexion", connection.Message);
                 return;
             }
+
             // CREO UNA INSTANCIA DE LA MAINVIEMODEL
             var mainViewModel = MainViewModel.getInstance();
 
+
+            // ESTO ES PARA LAS IMAGENES
+            byte[] imageArray = null;
+            if (file != null)
+            {
+                imageArray = FilesHelper.ReadFully(file.GetStream());
+                file.Dispose();
+            }
+
+        
             // ESTO ES PARA LA VIEW -- PARA TENER LOS CAMPOS ANTERIORES
             product.Description = Description;
             product.IsActive = IsActive;
@@ -316,6 +373,9 @@ namespace Products.ViewModels
             product.Price = price;
             product.Remarks = Remarks;
             product.Stock = stock;
+            product.ImageArray = imageArray;
+
+       
 
             // RECURSO ESTATICO DE LA APP.XAML
             var urlAPI = Application.Current.Resources["URLAPI"].ToString();
